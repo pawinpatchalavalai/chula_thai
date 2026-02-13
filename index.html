@@ -1,0 +1,267 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Thai Consonant Drill</title>
+  <style>
+    :root { --bg:#f5f6f8; --card:#ffffff; --text:#111827; --muted:#6b7280; --line:#e5e7eb; }
+    * { box-sizing: border-box; font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; }
+    body { margin:0; background:var(--bg); color:var(--text); display:flex; min-height:100vh; align-items:center; justify-content:center; padding:24px; }
+    .card { width:min(520px, 100%); background:var(--card); border:1px solid var(--line); border-radius:16px; padding:22px; box-shadow:0 6px 18px rgba(0,0,0,.06); }
+    .top { display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:10px; }
+    .hearts { font-size:18px; letter-spacing:2px; }
+    h1 { font-size:16px; margin:0; text-align:center; font-weight:700; }
+    .subtitle { margin:0; color:var(--muted); text-align:center; font-size:13px; }
+    .big { font-size:88px; text-align:center; margin:18px 0 8px; line-height:1; }
+    .btns { display:grid; gap:10px; margin-top:14px; }
+    button {
+      border:1px solid var(--line);
+      background:#eef2f3;
+      padding:12px 14px;
+      border-radius:10px;
+      font-size:15px;
+      cursor:pointer;
+      transition:.12s transform ease, .12s filter ease;
+    }
+    button:hover { filter: brightness(0.98); transform: translateY(-1px); }
+    button:disabled { cursor:not-allowed; opacity:.6; transform:none; }
+    .primary {
+      background:#2563eb; color:white; border-color:#2563eb;
+      width:100%; padding:12px 14px; border-radius:10px; font-weight:700;
+    }
+    .row { display:flex; gap:10px; margin-top:14px; }
+    .ghost { background:white; }
+    .msg { margin-top:14px; min-height:44px; text-align:center; }
+    .ok { color:#16a34a; font-weight:700; }
+    .bad { color:#dc2626; font-weight:700; }
+    .small { font-size:14px; color:var(--muted); margin-top:6px; }
+    .divider { height:1px; background:var(--line); margin:16px 0; }
+    .hidden { display:none; }
+    .team { font-weight:800; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <!-- START SCREEN -->
+    <div id="startScreen">
+      <h1><span class="team">CSII Team X</span> presents</h1>
+      <p class="subtitle">Thai Consonants</p>
+      <div class="divider"></div>
+      <button class="primary" id="startBtn">Start Quiz</button>
+      <p class="small" style="text-align:center;margin-bottom:0;">
+        You have 3 hearts. One wrong answer = lose 1 heart.
+      </p>
+    </div>
+
+    <!-- QUIZ SCREEN -->
+    <div id="quizScreen" class="hidden">
+      <div class="top">
+        <div class="hearts" id="hearts"></div>
+        <div style="flex:1;">
+          <h1>Thai Consonant Drill</h1>
+          <p class="subtitle" id="progress"></p>
+        </div>
+        <div style="width:20px;"></div>
+      </div>
+
+      <div class="big" id="questionChar">ก</div>
+
+      <div class="btns">
+        <button id="opt0"></button>
+        <button id="opt1"></button>
+        <button id="opt2"></button>
+      </div>
+
+      <div class="msg" id="message"></div>
+
+      <div class="row">
+        <button class="ghost" id="skipBtn" title="Skip (no penalty)">Skip</button>
+        <button class="ghost" id="restartBtn">Restart</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // 44 Thai consonants (basic school names / transliteration-ish)
+    // You can adjust spelling if your professor wants a different romanization.
+    const consonants = [
+      { ch:"ก", name:"ก ไก่",   rom:"gor gai" },
+      { ch:"ข", name:"ข ไข่",   rom:"khor khai" },
+      { ch:"ฃ", name:"ฃ ขวด",   rom:"khor khuad" },
+      { ch:"ค", name:"ค ควาย",  rom:"khor khwai" },
+      { ch:"ฅ", name:"ฅ คน",    rom:"khor khon" },
+      { ch:"ฆ", name:"ฆ ระฆัง", rom:"khor rakhang" },
+      { ch:"ง", name:"ง งู",    rom:"ngor ngu" },
+      { ch:"จ", name:"จ จาน",   rom:"jor jan" },
+      { ch:"ฉ", name:"ฉ ฉิ่ง",  rom:"chor ching" },
+      { ch:"ช", name:"ช ช้าง",  rom:"chor chang" },
+      { ch:"ซ", name:"ซ โซ่",   rom:"sor so" },
+      { ch:"ฌ", name:"ฌ เฌอ",   rom:"chor choe" },
+      { ch:"ญ", name:"ญ หญิง",  rom:"yor ying" },
+      { ch:"ฎ", name:"ฎ ชฎา",   rom:"dor chada" },
+      { ch:"ฏ", name:"ฏ ปฏัก",  rom:"tor patak" },
+      { ch:"ฐ", name:"ฐ ฐาน",   rom:"thor than" },
+      { ch:"ฑ", name:"ฑ มณโฑ",  rom:"thor montho" },
+      { ch:"ฒ", name:"ฒ ผู้เฒ่า",rom:"thor phuthao" },
+      { ch:"ณ", name:"ณ เณร",   rom:"nor nen" },
+      { ch:"ด", name:"ด เด็ก",  rom:"dor dek" },
+      { ch:"ต", name:"ต เต่า",  rom:"tor tao" },
+      { ch:"ถ", name:"ถ ถุง",   rom:"thor thung" },
+      { ch:"ท", name:"ท ทหาร",  rom:"thor thahan" },
+      { ch:"ธ", name:"ธ ธง",    rom:"thor thong" },
+      { ch:"น", name:"น หนู",   rom:"nor nu" },
+      { ch:"บ", name:"บ ใบไม้", rom:"bor baimai" },
+      { ch:"ป", name:"ป ปลา",   rom:"por pla" },
+      { ch:"ผ", name:"ผ ผึ้ง",  rom:"phor phueng" },
+      { ch:"ฝ", name:"ฝ ฝา",    rom:"for fa" },
+      { ch:"พ", name:"พ พาน",   rom:"phor phan" },
+      { ch:"ฟ", name:"ฟ ฟัน",   rom:"for fan" },
+      { ch:"ภ", name:"ภ สำเภา", rom:"phor samphao" },
+      { ch:"ม", name:"ม ม้า",   rom:"mor ma" },
+      { ch:"ย", name:"ย ยักษ์", rom:"yor yak" },
+      { ch:"ร", name:"ร เรือ",  rom:"ror ruea" },
+      { ch:"ล", name:"ล ลิง",   rom:"lor ling" },
+      { ch:"ว", name:"ว แหวน",  rom:"wor waen" },
+      { ch:"ศ", name:"ศ ศาลา",  rom:"sor sala" },
+      { ch:"ษ", name:"ษ ฤๅษี",  rom:"sor rue-si" },
+      { ch:"ส", name:"ส เสือ",  rom:"sor suea" },
+      { ch:"ห", name:"ห หีบ",   rom:"hor hip" },
+      { ch:"ฬ", name:"ฬ จุฬา",  rom:"lor chula" },
+      { ch:"อ", name:"อ อ่าง",  rom:"or ang" },
+      { ch:"ฮ", name:"ฮ นกฮูก", rom:"hor nok-huk" },
+    ];
+
+    const startScreen = document.getElementById("startScreen");
+    const quizScreen  = document.getElementById("quizScreen");
+
+    const startBtn   = document.getElementById("startBtn");
+    const restartBtn = document.getElementById("restartBtn");
+    const skipBtn    = document.getElementById("skipBtn");
+
+    const heartsEl   = document.getElementById("hearts");
+    const progressEl = document.getElementById("progress");
+    const charEl     = document.getElementById("questionChar");
+    const msgEl      = document.getElementById("message");
+
+    const optBtns = [
+      document.getElementById("opt0"),
+      document.getElementById("opt1"),
+      document.getElementById("opt2"),
+    ];
+
+    let hearts = 3;
+    let remaining = [];
+    let current = null;
+    let locked = false;
+    let total = consonants.length;
+
+    function shuffle(arr) {
+      for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+      }
+      return arr;
+    }
+
+    function setHearts() {
+      heartsEl.textContent = "❤️".repeat(hearts) + "🖤".repeat(3 - hearts);
+    }
+
+    function setMessage(type, title, detail) {
+      const cls = type === "ok" ? "ok" : "bad";
+      msgEl.innerHTML = `
+        <div class="${cls}">${title}</div>
+        ${detail ? `<div class="small" style="color:var(--text)">${detail}</div>` : ""}
+      `;
+    }
+
+    function setButtonsDisabled(disabled) {
+      optBtns.forEach(b => b.disabled = disabled);
+      skipBtn.disabled = disabled;
+    }
+
+    function newRound() {
+      locked = false;
+      setButtonsDisabled(false);
+      msgEl.textContent = "";
+
+      if (remaining.length === 0) {
+        // Finished all
+        setMessage("ok", "🎉 Finished!", "You answered all 44 consonants. Press Restart to play again.");
+        setButtonsDisabled(true);
+        return;
+      }
+
+      current = remaining.pop();
+      charEl.textContent = current.ch;
+
+      // Pick 2 wrong answers
+      const wrongPool = consonants.filter(x => x.ch !== current.ch);
+      shuffle(wrongPool);
+      const options = shuffle([current, wrongPool[0], wrongPool[1]]);
+
+      options.forEach((opt, i) => {
+        optBtns[i].textContent = opt.rom; // show choices as romanization like in the mock
+        optBtns[i].onclick = () => choose(opt);
+      });
+
+      const done = total - remaining.length - 1; // current included
+      progressEl.textContent = `Question ${done + 1} / ${total}`;
+    }
+
+    function choose(selected) {
+      if (locked) return;
+      locked = true;
+      setButtonsDisabled(true);
+
+      const correct = selected.ch === current.ch;
+
+      if (correct) {
+        setMessage("ok", "✓ Correct", `${current.ch} — ${current.name}`);
+        setTimeout(() => newRound(), 900);
+      } else {
+        hearts -= 1;
+        setHearts();
+        if (hearts <= 0) {
+          setMessage("bad", "✗ Incorrect", `Game Over. Correct answer was: ${current.ch} — ${current.name}`);
+          charEl.textContent = current.ch;
+          setButtonsDisabled(true);
+        } else {
+          setMessage("bad", "✗ Incorrect", `Correct answer was: ${current.ch} — ${current.name}`);
+          // keep going after a moment
+          setTimeout(() => newRound(), 1100);
+        }
+      }
+    }
+
+    function startGame() {
+      hearts = 3;
+      setHearts();
+      remaining = shuffle([...consonants]); // all 44
+      startScreen.classList.add("hidden");
+      quizScreen.classList.remove("hidden");
+      newRound();
+    }
+
+    function restartGame() {
+      // back to start screen (optional). Or restart immediately.
+      hearts = 3;
+      setHearts();
+      remaining = shuffle([...consonants]);
+      msgEl.textContent = "";
+      setButtonsDisabled(false);
+      newRound();
+    }
+
+    startBtn.addEventListener("click", startGame);
+    restartBtn.addEventListener("click", restartGame);
+
+    skipBtn.addEventListener("click", () => {
+      if (locked) return;
+      // no penalty skip: put current back somewhere (or just move on)
+      newRound();
+    });
+  </script>
+</body>
+</html>
