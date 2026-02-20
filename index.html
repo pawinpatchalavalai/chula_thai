@@ -152,6 +152,7 @@
 
     let hearts = 3;
     let remaining = [];
+    let learned = []; // Track correctly answered consonants
     let current = null;
     let locked = false;
     let total = consonants.length;
@@ -186,18 +187,23 @@
       setButtonsDisabled(false);
       msgEl.textContent = "";
 
-      if (remaining.length === 0) {
+      // Filter out already learned consonants
+      const unlearned = remaining.filter(x => !learned.some(l => l.ch === x.ch));
+
+      if (unlearned.length === 0) {
         // Finished all
         setMessage("ok", "🎉 Finished!", "You answered all 44 consonants. Press Restart to play again.");
         setButtonsDisabled(true);
         return;
       }
 
-      current = remaining.pop();
+      // Pick random unlearned consonant
+      const idx = Math.floor(Math.random() * unlearned.length);
+      current = unlearned[idx];
       charEl.textContent = current.ch;
 
-      // Pick 2 wrong answers
-      const wrongPool = consonants.filter(x => x.ch !== current.ch);
+      // Pick 2 wrong answers (also from unlearned)
+      const wrongPool = unlearned.filter(x => x.ch !== current.ch);
       shuffle(wrongPool);
       const options = shuffle([current, wrongPool[0], wrongPool[1]]);
 
@@ -206,8 +212,8 @@
         optBtns[i].onclick = () => choose(opt);
       });
 
-      const done = total - remaining.length - 1; // current included
-      progressEl.textContent = `Question ${done + 1} / ${total}`;
+      const askedCount = total - unlearned.length;
+      progressEl.textContent = `Remaining: ${unlearned.length}  •  Learned: ${learned.length}/${total}`;
     }
 
     function choose(selected) {
@@ -218,6 +224,7 @@
       const correct = selected.ch === current.ch;
 
       if (correct) {
+        learned.push(current); // Add to learned list
         setMessage("ok", "✓ Correct", `${current.ch} — ${current.name}`);
         setTimeout(() => newRound(), 900);
       } else {
@@ -238,7 +245,8 @@
     function startGame() {
       hearts = 3;
       setHearts();
-      remaining = shuffle([...consonants]); // all 44
+      learned = []; // Reset learned list
+      remaining = [...consonants]; // Reset remaining with all consonants
       startScreen.classList.add("hidden");
       quizScreen.classList.remove("hidden");
       newRound();
@@ -248,7 +256,8 @@
       // back to start screen (optional). Or restart immediately.
       hearts = 3;
       setHearts();
-      remaining = shuffle([...consonants]);
+      learned = []; // Reset learned list
+      remaining = [...consonants]; // Reset remaining with all consonants
       msgEl.textContent = "";
       setButtonsDisabled(false);
       newRound();
