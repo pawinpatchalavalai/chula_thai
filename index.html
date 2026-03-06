@@ -5,16 +5,79 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Thai Consonant Drill</title>
   <style>
-    :root { --bg:#f5f6f8; --card:#ffffff; --text:#111827; --muted:#6b7280; --line:#e5e7eb; }
-    * { box-sizing: border-box; font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; }
-    body { margin:0; background:var(--bg); color:var(--text); display:flex; min-height:100vh; align-items:center; justify-content:center; padding:24px; }
-    .card { width:min(520px, 100%); background:var(--card); border:1px solid var(--line); border-radius:16px; padding:22px; box-shadow:0 6px 18px rgba(0,0,0,.06); }
-    .top { display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:10px; }
-    .hearts { font-size:18px; letter-spacing:2px; }
-    h1 { font-size:16px; margin:0; text-align:center; font-weight:700; }
-    .subtitle { margin:0; color:var(--muted); text-align:center; font-size:13px; }
-    .big { font-size:88px; text-align:center; margin:18px 0 8px; line-height:1; }
-    .btns { display:grid; gap:10px; margin-top:14px; }
+    :root {
+      --bg:#f5f6f8;
+      --card:#ffffff;
+      --text:#111827;
+      --muted:#6b7280;
+      --line:#e5e7eb;
+    }
+
+    * {
+      box-sizing: border-box;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+    }
+
+    body {
+      margin:0;
+      background:var(--bg);
+      color:var(--text);
+      display:flex;
+      min-height:100vh;
+      align-items:center;
+      justify-content:center;
+      padding:24px;
+    }
+
+    .card {
+      width:min(520px, 100%);
+      background:var(--card);
+      border:1px solid var(--line);
+      border-radius:16px;
+      padding:22px;
+      box-shadow:0 6px 18px rgba(0,0,0,.06);
+    }
+
+    .top {
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      margin-bottom:10px;
+    }
+
+    .hearts {
+      font-size:18px;
+      letter-spacing:2px;
+    }
+
+    h1 {
+      font-size:16px;
+      margin:0;
+      text-align:center;
+      font-weight:700;
+    }
+
+    .subtitle {
+      margin:0;
+      color:var(--muted);
+      text-align:center;
+      font-size:13px;
+    }
+
+    .big {
+      font-size:88px;
+      text-align:center;
+      margin:18px 0 8px;
+      line-height:1;
+    }
+
+    .btns {
+      display:grid;
+      gap:10px;
+      margin-top:14px;
+    }
+
     button {
       border:1px solid var(--line);
       background:#eef2f3;
@@ -24,21 +87,102 @@
       cursor:pointer;
       transition:.12s transform ease, .12s filter ease;
     }
-    button:hover { filter: brightness(0.98); transform: translateY(-1px); }
-    button:disabled { cursor:not-allowed; opacity:.6; transform:none; }
-    .primary {
-      background:#2563eb; color:white; border-color:#2563eb;
-      width:100%; padding:12px 14px; border-radius:10px; font-weight:700;
+
+    button:hover {
+      filter: brightness(0.98);
+      transform: translateY(-1px);
     }
-    .row { display:flex; gap:10px; margin-top:14px; }
-    .ghost { background:white; }
-    .msg { margin-top:14px; min-height:44px; text-align:center; }
-    .ok { color:#16a34a; font-weight:700; }
-    .bad { color:#dc2626; font-weight:700; }
-    .small { font-size:14px; color:var(--muted); margin-top:6px; }
-    .divider { height:1px; background:var(--line); margin:16px 0; }
-    .hidden { display:none; }
-    .team { font-weight:800; }
+
+    button:disabled {
+      cursor:not-allowed;
+      opacity:.6;
+      transform:none;
+    }
+
+    .primary {
+      background:#2563eb;
+      color:white;
+      border-color:#2563eb;
+      width:100%;
+      padding:12px 14px;
+      border-radius:10px;
+      font-weight:700;
+    }
+
+    .row {
+      display:flex;
+      gap:10px;
+      margin-top:14px;
+    }
+
+    .ghost {
+      background:white;
+    }
+
+    .msg {
+      margin-top:14px;
+      min-height:44px;
+      text-align:center;
+    }
+
+    .ok {
+      color:#16a34a;
+      font-weight:700;
+    }
+
+    .bad {
+      color:#dc2626;
+      font-weight:700;
+    }
+
+    .small {
+      font-size:14px;
+      color:var(--muted);
+      margin-top:6px;
+    }
+
+    .divider {
+      height:1px;
+      background:var(--line);
+      margin:16px 0;
+    }
+
+    .hidden {
+      display:none;
+    }
+
+    .team {
+      font-weight:800;
+    }
+
+    .nickname-input {
+      width:100%;
+      padding:12px 14px;
+      border:1px solid var(--line);
+      border-radius:10px;
+      font-size:15px;
+      margin-bottom:10px;
+      outline:none;
+    }
+
+    .nickname-input:focus {
+      border-color:#2563eb;
+    }
+
+    .nickname-display {
+      text-align:center;
+      font-weight:700;
+      font-size:16px;
+      margin-bottom:8px;
+    }
+
+    .warning {
+      color:#dc2626;
+      text-align:center;
+      font-size:13px;
+      margin-top:10px;
+      min-height:18px;
+    }
   </style>
 </head>
 <body>
@@ -48,7 +192,18 @@
       <h1><span class="team">CSII Team X</span> presents</h1>
       <p class="subtitle">Thai Consonants</p>
       <div class="divider"></div>
+
+      <input
+        id="nicknameInput"
+        class="nickname-input"
+        type="text"
+        placeholder="Enter your nickname"
+      />
+
       <button class="primary" id="startBtn">Start Quiz</button>
+
+      <div id="nicknameWarning" class="warning"></div>
+
       <p class="small" style="text-align:center;margin-bottom:0;">
         You have 3 hearts. One wrong answer = lose 1 heart.
       </p>
@@ -56,6 +211,8 @@
 
     <!-- QUIZ SCREEN -->
     <div id="quizScreen" class="hidden">
+      <div id="nicknameDisplay" class="nickname-display"></div>
+
       <div class="top">
         <div class="hearts" id="hearts"></div>
         <div style="flex:1;">
@@ -83,8 +240,6 @@
   </div>
 
   <script>
-    // 44 Thai consonants (basic school names / transliteration-ish)
-    // You can adjust spelling if your professor wants a different romanization.
     const consonants = [
       { ch:"ก", name:"ก ไก่",   rom:"gor gai" },
       { ch:"ข", name:"ข ไข่",   rom:"khor khai" },
@@ -133,16 +288,20 @@
     ];
 
     const startScreen = document.getElementById("startScreen");
-    const quizScreen  = document.getElementById("quizScreen");
+    const quizScreen = document.getElementById("quizScreen");
 
-    const startBtn   = document.getElementById("startBtn");
+    const startBtn = document.getElementById("startBtn");
     const restartBtn = document.getElementById("restartBtn");
-    const skipBtn    = document.getElementById("skipBtn");
+    const skipBtn = document.getElementById("skipBtn");
 
-    const heartsEl   = document.getElementById("hearts");
+    const nicknameInput = document.getElementById("nicknameInput");
+    const nicknameDisplay = document.getElementById("nicknameDisplay");
+    const nicknameWarning = document.getElementById("nicknameWarning");
+
+    const heartsEl = document.getElementById("hearts");
     const progressEl = document.getElementById("progress");
-    const charEl     = document.getElementById("questionChar");
-    const msgEl      = document.getElementById("message");
+    const charEl = document.getElementById("questionChar");
+    const msgEl = document.getElementById("message");
 
     const optBtns = [
       document.getElementById("opt0"),
@@ -152,10 +311,11 @@
 
     let hearts = 3;
     let remaining = [];
-    let learned = []; // Track correctly answered consonants
+    let learned = [];
     let current = null;
     let locked = false;
     let total = consonants.length;
+    let playerNickname = "";
 
     function shuffle(arr) {
       for (let i = arr.length - 1; i > 0; i--) {
@@ -173,7 +333,7 @@
       const cls = type === "ok" ? "ok" : "bad";
       msgEl.innerHTML = `
         <div class="${cls}">${title}</div>
-        ${detail ? <div class="small" style="color:var(--text)">${detail}</div> : ""}
+        ${detail ? `<div class="small" style="color:var(--text)">${detail}</div>` : ""}
       `;
     }
 
@@ -187,33 +347,28 @@
       setButtonsDisabled(false);
       msgEl.textContent = "";
 
-      // Filter out already learned consonants
       const unlearned = remaining.filter(x => !learned.some(l => l.ch === x.ch));
 
       if (unlearned.length === 0) {
-        // Finished all
         setMessage("ok", "🎉 Finished!", "You answered all 44 consonants. Press Restart to play again.");
         setButtonsDisabled(true);
         return;
       }
 
-      // Pick random unlearned consonant
       const idx = Math.floor(Math.random() * unlearned.length);
       current = unlearned[idx];
       charEl.textContent = current.ch;
 
-      // Pick 2 wrong answers (also from unlearned)
       const wrongPool = unlearned.filter(x => x.ch !== current.ch);
       shuffle(wrongPool);
       const options = shuffle([current, wrongPool[0], wrongPool[1]]);
 
       options.forEach((opt, i) => {
-        optBtns[i].textContent = opt.rom; // show choices as romanization like in the mock
+        optBtns[i].textContent = opt.rom;
         optBtns[i].onclick = () => choose(opt);
       });
 
-      const askedCount = total - unlearned.length;
-      progressEl.textContent = `Remaining: ${unlearned.length}  •  Learned: ${learned.length}/${total}`;
+      progressEl.textContent = `Remaining: ${unlearned.length} • Learned: ${learned.length}/${total}`;
     }
 
     function choose(selected) {
@@ -224,37 +379,69 @@
       const correct = selected.ch === current.ch;
 
       if (correct) {
-        learned.push(current); // Add to learned list
+        learned.push(current);
         setMessage("ok", "✓ Correct", `${current.ch} — ${current.name}`);
         setTimeout(() => newRound(), 900);
       } else {
         hearts -= 1;
         setHearts();
+
         if (hearts <= 0) {
           setMessage("bad", "✗ Incorrect", `Game Over. Correct answer was: ${current.ch} — ${current.name}`);
           charEl.textContent = current.ch;
           setButtonsDisabled(true);
         } else {
           setMessage("bad", "✗ Incorrect", `Correct answer was: ${current.ch} — ${current.name}`);
-          // keep going after a moment
           setTimeout(() => newRound(), 1100);
         }
       }
     }
 
     function startGame() {
+      const nickname = nicknameInput.value.trim();
+
+      if (!nickname) {
+        nicknameWarning.textContent = "Please enter your nickname first.";
+        return;
+      }
+
+      nicknameWarning.textContent = "";
+      playerNickname = nickname;
+      nicknameDisplay.textContent = playerNickname;
+
       hearts = 3;
       setHearts();
-      learned = []; // Reset learned list
-      remaining = [...consonants]; // Reset remaining with all consonants
+      learned = [];
+      remaining = [...consonants];
       startScreen.classList.add("hidden");
       quizScreen.classList.remove("hidden");
       newRound();
     }
 
     function restartGame() {
-      // back to start screen (optional). Or restart immediately.
       hearts = 3;
       setHearts();
-      learned = []; // Reset learned list
-      remaining = [...consonants]; // Reset remaining with all conson
+      learned = [];
+      remaining = [...consonants];
+      msgEl.textContent = "";
+      setButtonsDisabled(false);
+      nicknameDisplay.textContent = playerNickname;
+      newRound();
+    }
+
+    startBtn.addEventListener("click", startGame);
+    restartBtn.addEventListener("click", restartGame);
+
+    nicknameInput.addEventListener("keydown", (event) => {
+      if (event.key === "Enter") {
+        startGame();
+      }
+    });
+
+    skipBtn.addEventListener("click", () => {
+      if (locked) return;
+      newRound();
+    });
+  </script>
+</body>
+</html>
